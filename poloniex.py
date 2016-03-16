@@ -26,7 +26,7 @@ PRIVATE_COMMANDS = ['returnBalances', 'returnCompleteBalances', 'returnDepositAd
 class Poloniex:
 	def __init__(self, APIKey='', Secret=''):
 		self.APIKey = APIKey
-		self.Secret = Secret
+		self.Secret = Secret.encode('utf8')
 		# Conversions
 		self.timestamp_str = lambda timestamp=time.time(), format="%Y-%m-%d %H:%M:%S": datetime.fromtimestamp(timestamp).strftime(format)
 		self.str_timestamp = lambda datestr=self.timestamp_str(), format="%Y-%m-%d %H:%M:%S": int(time.mktime(time.strptime(datestr, format)))
@@ -81,7 +81,7 @@ class Poloniex:
 				print("An APIKey and Secret is needed!")
 				return False
 			url, args['nonce'] = ['https://poloniex.com/tradingApi', int(time.time()*42)]
-			post_data = urlencode(args)
+			post_data = bytes(urlencode(args),'utf8')
 			sign = hmac.new(self.Secret, post_data, hashlib.sha512).hexdigest()
 			headers = {'Sign': sign, 'Key': self.APIKey}
 			ret = urlopen(Request(url, post_data, headers))
