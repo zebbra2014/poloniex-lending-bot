@@ -103,7 +103,7 @@ def main():
         try:
             offer_rate = returnLoanOrders(currency)
             if offer_rate > min_rate:
-                my_offer_rate = offer_rate - 0.00000001
+                my_offer_rate = int((offer_rate - 0.00000001) * 100000000) / 100000000. 
                 lending_balance = returnLendingBalanceAvailable(currency)
                 if lending_balance >= 0.001:
                     # order_id = createLoanOffer(currency, lending_balance, duration, autoRenew, my_offer_rate)
@@ -120,8 +120,9 @@ def main():
                             except Exception as exc:
                                 print(exc)
                                 sleep(1)
+            sleep(1)
         except Exception as exc:
-            # print(exc)
+            print(exc)
             sleep(1)
 
 main()
