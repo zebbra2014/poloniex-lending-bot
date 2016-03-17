@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import poloniex
+import json
 from time import sleep
 
 ### CONFIGURATION ###
@@ -59,10 +60,13 @@ def createLoanOffer(currency, amount, duration, autoRenew, lendingRate):
         try:
             api_sleep()
             create_Loan_Offer = polo.api('createLoanOffer', {'currency':currency, 'amount':amount, 'duration':duration, 'autoRenew':autoRenew, 'lendingRate':lendingRate})
-            # print(create_Loan_Offer)
-            if int(create_Loan_Offer['success']) == 1:
-                order_id = int(create_Loan_Offer['orderId'])
-                print(str(create_Loan_Offer['message']))
+            p = lambda:None
+            p.__dict__ = create_Loan_Offer
+            success = int(p.success)
+            # print(success)
+            if success == 1:
+                order_id = int(p.orderID)
+                print(order_id, str(p.message))
                 return order_id
             else:
                 return -1
@@ -118,11 +122,11 @@ def main():
                                     cancelLoanOffer(order_id)
                                     break
                             except Exception as exc:
-                                print(exc)
+                                # print(exc)
                                 sleep(1)
             sleep(1)
         except Exception as exc:
-            print(exc)
+            # print(exc)
             sleep(1)
 
 main()
